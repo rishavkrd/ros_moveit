@@ -72,13 +72,22 @@ def detect_noise(data):
     return alert
 
 
-def execute_behavior(robot, scene, move_group):
+def execute_behavior():
     """
     The motor schema.
     Args:
         alert (bool): ALERT signal.
     """
+    robot = moveit_commander.RobotCommander()
+    scene = moveit_commander.PlanningSceneInterface()
     
+    
+
+    group_name = "survivor_buddy_head"
+    move_group = moveit_commander.MoveGroupCommander(group_name)
+    
+    planning_frame = move_group.get_planning_frame()
+    print("============ Planning frame: %s" % planning_frame)
     
     # robot:
     print("============ Printing robot state")
@@ -141,17 +150,5 @@ if __name__ == "__main__":
     )
     sub = rospy.Subscriber("/audio", Float32MultiArray, callback=startle_callback)
     rospy.loginfo("Node started.")
-	
-    robot = moveit_commander.RobotCommander()
-    scene = moveit_commander.PlanningSceneInterface()
-    
-    
 
-    group_name = "survivor_buddy_head"
-    move_group = moveit_commander.MoveGroupCommander(group_name)
-    
-    planning_frame = move_group.get_planning_frame()
-    print("============ Planning frame: %s" % planning_frame)
-    #rospy.spin()
-    while not rospy.is_shutdown():
-    	execute_behavior(robot, scene, move_group)
+    rospy.spin()
